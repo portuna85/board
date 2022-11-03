@@ -1,0 +1,25 @@
+POST localhost:8080/user/signup
+Content-Type: application/json
+
+{
+  "username": "JSBAE",
+  "password": "dskljhf",
+  "nickname": "sdfssdadfa{{$randomInt}}",
+  "email": "portuna{{$randomInt}}@dreamwiz.com"
+}
+
+###
+
+POST localhost:8080/user/17/update
+Content-Type: application/json
+
+{
+  "nickname" : "MESI",
+  "password" : "jiouxjgsd035",
+  "email" : "difosd@gmail.com"
+}
+
+###
+GET localhost:8080/user/5
+Content-Type: application/json
+
