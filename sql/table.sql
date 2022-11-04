@@ -16,10 +16,8 @@ create table user
     created_date  datetime                  not null comment '회원가입 시각',
     modified_date datetime                  not null comment '회원정보 시각',
     constraint user_email_unique
-        unique (email, nickname, username)
+        unique (user_id, email, username)
 );
-
-
 
 create table posts
 (

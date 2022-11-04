@@ -7,7 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -17,14 +21,27 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String joinForm(Model model) {
-        model.addAttribute("UserDto", new UserDto.Request());
+    public String joinForm() {
+        log.info("JOIN FORM");
         return "users/createMember";
     }
 
+    /**
+     * 회원가입
+     */
     @PostMapping("/signup")
-    public String join(UserDto.Request dto) {
-        userService.saveUser(dto);
+    public String joinForm(@Valid @ModelAttribute UserDto.Request UserDto, Errors errors, Model model) {
+
+        log.info("UserDto = {}", UserDto);
+        if (errors.hasErrors()) {
+            // 회원가입 실패시 입력 데이터 값을 유지
+            model.addAttribute("UserDto", UserDto);
+            return "users/createMember";
+        }
+
+
+
+        userService.saveUser(UserDto);
         return "redirect:/";
     }
 
