@@ -1,47 +1,53 @@
 <!DOCTYPE html>
+<html lang="ko">
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="application/json; charset=UTF-8"/>
     <title>Blitz</title>
 </head>
-<style>
-    .fieldError {
-        border-color: #bd2130;
-    }
-</style>
-
 <body>
 <div class="container">
+    <div class="py-5 text-center">
+        <h2>회원 정보</h2>
+    </div>
+    <div>
+        <label for="username">회원 ID</label>
+        <input type="text" id="username" name="username" class="form-control" value="1" th:value="${user.username}"
+               readonly>
+    </div>
+    <div>
+        <label for="password">비밀번호</label>
+        <input type="button" id="password" name="password" class="form-control"
+               onclick="location.href='editPassword.html'" value="비밀번호 수정"/>
+        </label>
+    </div>
+    <div>
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" name="nickname" class="form-control" value="Blitz Name"
+               th:value="${user.nickname}" readonly>
+        <button class="btn btn-primary float-end" onclick="location.href='editNickname.html'" type="button">닉네임 변경
+        </button>
+    </div>
+    <div>
+        <label for="email">이메일</label>
+        <input type="text" id="email" name="email" class="form-control" value="10" th:value="${user.email}" readonly>
+        <button class="btn btn-primary float-end" onclick="location.href='editEmail.html'" type="button">이메일 변경</button>
+    </div>
 
-    <form role="form" action="/signup" th:object="${UserDto}" method="post">
-        <div class="form-group">
-            <label for="username">아이디</label>
-            <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="아이디 입력해 주세요"
-                   th:class="${#fields.hasErrors('username')} ? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect date</p>
+    <!-- 500 오류로 인해 추후 수정 예정 -->
+    <div>
+        <label for="role">회원 등급</label>
+        <input type="text" id="role" name="role" class="form-control" value="골드" th:value="${user.role}"
+               placeholder="수정 예정" readonly>
+    </div>
+
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='items.html'" type="button">처음으로
+            </button>
         </div>
-
-        <div class="form-group">
-            <label for="password">비밀번호 입력</label>
-            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호 입력해 주세요">
-        </div>
-
-        <div class="form-group">
-            <label for="nickname">닉네임 입력</label>
-            <input type="text" id="nickname" th:field="*{nickname}" class="form-control" placeholder="닉네임 입력"
-                   th:class="${#fields.hasErrors('nickname')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Incorrect date</p>
-        </div>
-
-        <div class="form-group">
-            <label for="email">이메일 입력</label>
-            <input type="text" id="email" th:field="*{email}" class="form-control" placeholder="이메일 입력"
-                   th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p>
-        </div>
-
-        <button type="submit" class="btn btn-primary">회원 가입</button>
-    </form>
-</div>
+    </div>
+</div> <!-- /container -->
 </body>
 </html>

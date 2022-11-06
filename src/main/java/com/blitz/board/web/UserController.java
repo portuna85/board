@@ -30,16 +30,9 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public String joinForm(@Valid @ModelAttribute UserDto.Request UserDto, Errors errors, Model model) {
+    public String joinForm(@ModelAttribute UserDto.Request UserDto, Errors errors, Model model) {
 
         log.info("UserDto = {}", UserDto);
-        if (errors.hasErrors()) {
-            // 회원가입 실패시 입력 데이터 값을 유지
-            model.addAttribute("UserDto", UserDto);
-            return "users/createMember";
-        }
-
-
 
         userService.saveUser(UserDto);
         return "redirect:/";

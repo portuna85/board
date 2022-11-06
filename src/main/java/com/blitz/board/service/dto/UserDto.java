@@ -18,15 +18,12 @@ public class UserDto {
     public static class Request {
         private Long id;
 
-        @NotEmpty(message = "아이디 입력해 주세요")
         private String username;
 
-        @NotEmpty(message = "비밀번호 입력해 주세요")
         private String password;
 
         private String nickname;
 
-        @NotEmpty(message = "이메일 입력해 주세요")
         private String email;
 
         private Role role;
