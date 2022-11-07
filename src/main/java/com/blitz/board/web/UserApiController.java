@@ -18,14 +18,14 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @PostMapping("/user/join")
+    @PostMapping("/signup")
     public ResponseEntity<String> join(@RequestBody UserDto.Request dto) {
         userService.saveUser(dto);
         log.info("join = {}", dto);
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
 
-    @PostMapping("/user/{userId}/update")
+    @PostMapping("/{userId}/update")
     public ResponseEntity<String> modifyUser(@RequestBody UserDto.Request dto, @PathVariable("userId") Long userId) {
         log.info("requestJoin = {}, pathVa = {}", dto, userId);
         userService.modifyUser(userId, dto);

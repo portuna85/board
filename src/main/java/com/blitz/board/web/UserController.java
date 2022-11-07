@@ -21,8 +21,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String joinForm() {
+    public String joinForm(@RequestBody UserDto.Request dto, Model model) {
         log.info("JOIN FORM");
+        model.addAttribute("UserDto", dto);
         return "users/createMember";
     }
 
@@ -30,14 +31,16 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public String joinForm(@ModelAttribute UserDto.Request UserDto, Errors errors, Model model) {
-
+    public String joinForm(@RequestBody UserDto.Request UserDto, Errors errors, Model model) {
         log.info("UserDto = {}", UserDto);
-
+        model.addAttribute("UserDto", UserDto);
         userService.saveUser(UserDto);
         return "redirect:/";
     }
 
+    /**
+     * 회원상세 정보
+     */
     @GetMapping("/user/{userId}")
     public String findUser(@PathVariable("userId") Long userId, Model model) {
         log.info("userId = {}", userId);

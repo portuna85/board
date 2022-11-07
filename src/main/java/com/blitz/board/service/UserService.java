@@ -4,12 +4,14 @@ import com.blitz.board.domain.User;
 import com.blitz.board.repository.UserRepository;
 import com.blitz.board.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -17,6 +19,7 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserDto.Request dto) {
+        log.info("UserDto = {}", dto);
         userRepository.join(dto.toEntity());
     }
 
