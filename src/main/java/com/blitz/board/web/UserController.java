@@ -35,6 +35,10 @@ public class UserController {
         log.info("UserDto = {}", UserDto);
         model.addAttribute("UserDto", UserDto);
         userService.saveUser(UserDto);
+        userService.saveUser(UserDto);
+        userService.saveUser(UserDto);
+        userService.saveUser(UserDto);
+        userService.saveUser(UserDto);
         return "redirect:/";
     }
 
