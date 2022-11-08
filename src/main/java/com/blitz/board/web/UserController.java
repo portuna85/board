@@ -50,6 +50,10 @@ public class UserController {
         log.info("userId = {}", userId);
         User user = userService.findUser(userId).get();
         model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
         return "users/user";
     }
 
