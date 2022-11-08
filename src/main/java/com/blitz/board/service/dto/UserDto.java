@@ -6,6 +6,7 @@ import com.blitz.board.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class UserDto {
 
-    @Data
+    @Getter @Setter
     public static class Request {
         private Long id;
 

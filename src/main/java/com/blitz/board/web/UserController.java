@@ -50,11 +50,13 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/editPassword")
-    public String modifyPassword(@PathVariable Long userId, String password ,Model model) {
-        // userService.modifyPassword(userId, password).get();
-
+    public String modifyPassword() {
         return "/users/editPassword";
     }
 
+    @PostMapping("/user/{userId}/editPassword")
+    public String modifyPassword(@PathVariable Long userId,UserDto.Request dto, Model model) {
 
+        return null;
+    }
 }

@@ -6,6 +6,7 @@ import com.blitz.board.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -27,4 +28,18 @@ public class UserService {
         return userRepository.findByUser(userId);
     }
 
+    @Transactional
+    public void modifyPassword(Long userId, UserDto.Request password) {
+        userRepository.modifyPassword(userId, password);
+    }
+
+    @Transactional
+    public void modifyNickname(Long userId, UserDto.Request nickname) {
+        userRepository.modifyNickname(userId, nickname);
+    }
+
+    @Transactional
+    public void modifyEmail(Long userId, UserDto.Request email) {
+        userRepository.modifyEmail(userId, email);
+    }
 }
