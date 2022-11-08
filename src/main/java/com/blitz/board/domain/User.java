@@ -1,12 +1,13 @@
 package com.blitz.board.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter @Setter
 public class User {
 
@@ -21,18 +22,8 @@ public class User {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public User() {
-    }
 
-    @Builder
-    public User(Long id, String username, String password, String nickname, String email, Role role, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.email = email;
-        this.role = role;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
+    public String getRoleValue() {
+        return this.role.getValue();
     }
 }

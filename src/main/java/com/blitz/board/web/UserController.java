@@ -22,7 +22,6 @@ public class UserController {
 
     @GetMapping("/signup")
     public String joinForm(UserDto.Request dto, Model model) {
-        log.info("DTO USERNAME = {}", dto.getUsername());
         model.addAttribute("UserDto", dto);
         return "users/createUser";
     }
@@ -32,9 +31,7 @@ public class UserController {
      */
     @PostMapping("/signup")
     public String joinForm(@ModelAttribute UserDto.Request UserDto) {
-        log.info("POST USERNAME = {}", UserDto.getUsername());
         userService.saveUser(UserDto);
-
         return "redirect:/";
     }
 
@@ -50,13 +47,9 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/editPassword")
-    public String modifyPassword() {
+    public String modifyPassword(UserDto.Request dto, Model model) {
+        log.info("DTO USERNAME = {}", dto.getPassword());
+        model.addAttribute("UserDto", dto);
         return "/users/editPassword";
-    }
-
-    @PostMapping("/user/{userId}/editPassword")
-    public String modifyPassword(@PathVariable Long userId,UserDto.Request dto, Model model) {
-
-        return null;
     }
 }

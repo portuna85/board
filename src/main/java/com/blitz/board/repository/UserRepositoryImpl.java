@@ -64,6 +64,32 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUser(Long id) {
+        String sql = "SELECT user_id, " +
+                " email, " +
+                " nickname, " +
+                " password, " +
+                " role, " +
+                " username, " +
+                " created_date, " +
+                " modified_date " +
+                " FROM user " +
+                " WHERE user_id = ?";
+        try {
+            User user = template.queryForObject(sql, userRowMapper(), id);
+            return Optional.of(user);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void delete(Long userID) {
+        String sql = "DELETE FROM user WHERE id= ?";
+        template.update(sql);
+    }
+
+    @Override
     public void modifyPassword(Long userId, UserDto.Request userDto) {
         String sql = "UPDATE user SET password = ? WHERE id = ?";
         template.update(sql, userDto.getPassword(), userId);
@@ -81,27 +107,7 @@ public class UserRepositoryImpl implements UserRepository {
         template.update(sql, userDto.getNickname(), userId);
     }
 
-    @Override
-    public Optional<User> findByUser(Long id) {
-        String sql = "SELECT user_id, " +
-                " email, " +
-                " nickname, " +
-                " password, " +
-                " role, " +
-                " username, " +
-                " created_date, " +
-                " modified_date " +
-                " FROM user " +
-                " WHERE user_id = ?";
-        try {
 
-
-            User user = template.queryForObject(sql, userRowMapper(), id);
-            return Optional.of(user);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
 
     @Override
     public List<User> findAll() {
@@ -109,11 +115,7 @@ public class UserRepositoryImpl implements UserRepository {
         return template.query(sql, userRowMapper());
     }
 
-    @Override
-    public void delete(Long userID) {
-        String sql = "DELETE FROM user WHERE id= ?";
-        template.update(sql);
-    }
+
 
 
     private RowMapper<User> userRowMapper() {

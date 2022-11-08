@@ -3,10 +3,7 @@ package com.blitz.board.service.dto;
 
 import com.blitz.board.domain.Role;
 import com.blitz.board.domain.User;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +12,10 @@ import java.time.LocalDateTime;
 
 public class UserDto {
 
-    @Getter @Setter
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class Request {
         private Long id;
 
@@ -30,22 +30,8 @@ public class UserDto {
         private Role role;
 
         private LocalDateTime createdDate;
+
         private LocalDateTime modifiedDate;
-
-        public Request() {
-        }
-
-        @Builder
-        public Request(Long id, String username, String password, String nickname, String email, Role role, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-            this.id = id;
-            this.username = username;
-            this.password = password;
-            this.nickname = nickname;
-            this.email = email;
-            this.role = role;
-            this.createdDate = createdDate;
-            this.modifiedDate = modifiedDate;
-        }
 
         public User toEntity() {
             return User.builder()
@@ -59,8 +45,6 @@ public class UserDto {
                     .modifiedDate(modifiedDate)
                     .build();
         }
-
-
     }
 
     @Getter
