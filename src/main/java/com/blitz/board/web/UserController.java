@@ -42,23 +42,19 @@ public class UserController {
      * 회원상세 정보
      */
     @GetMapping("/user/{userId}")
-    public String findUser(@PathVariable("userId") Long userId, Model model) {
+    public String findUser(@PathVariable Long userId, Model model) {
         log.info("userId = {}", userId);
         User user = userService.findUser(userId).get();
         model.addAttribute("user", user);
         return "users/user";
     }
 
-    @GetMapping("/user/{userId}/edit")
-    public String modifyPassword(@PathVariable("userId") Long userId, Model model) {
-        User user = userService.findUser(userId).get();
-        model.addAttribute("user", user);
-        return "users/editPassword";
+    @GetMapping("/user/{userId}/editPassword")
+    public String modifyPassword(@PathVariable Long userId, String password ,Model model) {
+        // userService.modifyPassword(userId, password).get();
+
+        return "/users/editPassword";
     }
 
-    @PostMapping("/{itemId}/edit")
-    public String modifyPassword(@PathVariable("userId") Long userId, @ModelAttribute UserDto.Request dto) {
-        userService.modifyPassword(userId, dto);
-        return "redirect:/users/{userId}";
-    }
+
 }

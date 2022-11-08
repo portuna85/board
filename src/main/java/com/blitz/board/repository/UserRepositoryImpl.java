@@ -25,10 +25,17 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public UserRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("user")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public User join(User user) {
@@ -56,35 +63,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void modifyUser(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user " +
-                " SET nickname = ?, password = ?, email = ?, modified_date = now() " +
-                " WHERE user_id = ?";
-
-        log.info("Repository dto = {}", dto);
-
-        template.update(sql, dto.getNickname(), dto.getPassword(), dto.getEmail(), userId);
+    public void modifyPassword(Long userId, UserDto.Request userDto) {
+        String sql = "UPDATE user SET password = ? WHERE id = ?";
+        template.update(sql, userDto.getPassword(), userId);
     }
 
     @Override
-    public void modifyPassword(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET password = ? WHERE user_id = ?";
-        log.info("Repo PassWord Modify = {}", dto);
-        template.update(sql, dto.getPassword(), userId);
+    public void modifyEmail(Long userId, UserDto.Request userDto) {
+        String sql = "UPDATE user SET email = ? WHERE id = ?";
+        template.update(sql, userDto.getEmail(), userId);
     }
 
     @Override
-    public void modifyNickname(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
-        log.info("Repo NickName Modify = {}", dto);
-        template.update(sql, dto.getNickname(), userId);
-    }
-
-    @Override
-    public void modifyEmail(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET email = ? WHERE user_id = ?";
-        log.info("Repo Email Modify = {}", dto);
-        template.update(sql, dto.getEmail(), userId);
+    public void modifyNickname(Long userId, UserDto.Request userDto) {
+        String sql = "UPDATE user SET email = ? WHERE id = ?";
+        template.update(sql, userDto.getNickname(), userId);
     }
 
     @Override
@@ -100,6 +93,8 @@ public class UserRepositoryImpl implements UserRepository {
                 " FROM user " +
                 " WHERE user_id = ?";
         try {
+
+
             User user = template.queryForObject(sql, userRowMapper(), id);
             return Optional.of(user);
         } catch (DataAccessException e) {
