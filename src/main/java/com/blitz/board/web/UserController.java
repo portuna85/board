@@ -53,6 +53,10 @@ public class UserController {
     public String findUser(@PathVariable("userId") Long userId, Model model) {
         User user = userService.findUser(userId);
         model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
+        model.addAttribute("user", user);
         return "users/user";
     }
 
