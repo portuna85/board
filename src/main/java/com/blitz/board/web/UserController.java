@@ -21,24 +21,20 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String joinForm(@RequestBody UserDto.Request dto, Model model) {
-        log.info("JOIN FORM");
+    public String joinForm(UserDto.Request dto, Model model) {
+        log.info("DTO USERNAME = {}", dto.getUsername());
         model.addAttribute("UserDto", dto);
-        return "users/createMember";
+        return "users/createUser";
     }
 
     /**
      * 회원가입
      */
     @PostMapping("/signup")
-    public String joinForm(@RequestBody UserDto.Request UserDto, Errors errors, Model model) {
-        log.info("UserDto = {}", UserDto);
-        model.addAttribute("UserDto", UserDto);
+    public String joinForm(@ModelAttribute UserDto.Request UserDto) {
+        log.info("POST USERNAME = {}", UserDto.getUsername());
         userService.saveUser(UserDto);
-        userService.saveUser(UserDto);
-        userService.saveUser(UserDto);
-        userService.saveUser(UserDto);
-        userService.saveUser(UserDto);
+
         return "redirect:/";
     }
 
