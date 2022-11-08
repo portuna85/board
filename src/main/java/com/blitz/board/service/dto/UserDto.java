@@ -59,6 +59,8 @@ public class UserDto {
                     .modifiedDate(modifiedDate)
                     .build();
         }
+
+
     }
 
     @Getter

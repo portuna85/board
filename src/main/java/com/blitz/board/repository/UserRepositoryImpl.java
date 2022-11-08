@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,10 +104,17 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<User> findAll() {
+        String sql = "SELECT * FROM user";
+        return template.query(sql, userRowMapper());
+    }
+
+    @Override
     public void delete(Long userID) {
         String sql = "DELETE FROM user WHERE id= ?";
         template.update(sql);
     }
+
 
     private RowMapper<User> userRowMapper() {
         return BeanPropertyRowMapper.newInstance(User.class); //camel 변환 지원
