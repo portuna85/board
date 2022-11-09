@@ -2,6 +2,7 @@ package com.blitz.board.service;
 
 import com.blitz.board.domain.User;
 import com.blitz.board.repository.UserRepository;
+import com.blitz.board.service.dto.LoginDto;
 import com.blitz.board.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,22 +24,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findUser(Long userId) {
-        return userRepository.findByUser(userId);
+    public User findUser(User userId) {
+        return userRepository.findById(userId);
     }
 
-    @Transactional
-    public void modifyPassword(Long userId, UserDto.Request password) {
-        userRepository.modifyPassword(userId, password);
-    }
-
-    @Transactional
-    public void modifyNickname(Long userId, UserDto.Request nickname) {
-        userRepository.modifyNickname(userId, nickname);
-    }
-
-    @Transactional
-    public void modifyEmail(Long userId, UserDto.Request email) {
-        userRepository.modifyEmail(userId, email);
+    @Transactional(readOnly = true)
+    public User login(String loginId, String password) {
+        return userRepository.findByLoginId(loginId)
+                .filter(u -> u.getPassword().equals(password))
+                .orElse(null);
     }
 }

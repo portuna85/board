@@ -1,18 +1,12 @@
 package com.blitz.board.repository;
 
-import com.blitz.board.domain.Role;
 import com.blitz.board.domain.User;
-import com.blitz.board.service.dto.UserDto;
-import lombok.RequiredArgsConstructor;
+import com.blitz.board.domain.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -21,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -64,8 +57,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUser(Long id) {
-        String sql = "SELECT user_id, " +
+    public User findById(User userId) {
+        String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +
                 " password, " +
@@ -74,48 +67,32 @@ public class UserRepositoryImpl implements UserRepository {
                 " created_date, " +
                 " modified_date " +
                 " FROM user " +
-                " WHERE user_id = ?";
+                " WHERE id = ?";
         try {
-            User user = template.queryForObject(sql, userRowMapper(), id);
-            return Optional.of(user);
+            User aLong = template.queryForObject(sql, userRowMapper(), userId);
+            return aLong;
         } catch (DataAccessException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public void delete(Long userID) {
+    public Optional<User> findByLoginId(String userId) {
+        List<User> result = template.query("SELECT id, username, password, nickname, email FROM user WHERE username = ?", userRowMapper(), userId);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public void delete(Long userId) {
         String sql = "DELETE FROM user WHERE id= ?";
-        template.update(sql);
+        template.update(sql, userId);
     }
-
-    @Override
-    public void modifyPassword(Long userId, UserDto.Request userDto) {
-        String sql = "UPDATE user SET password = ? WHERE id = ?";
-        template.update(sql, userDto.getPassword(), userId);
-    }
-
-    @Override
-    public void modifyEmail(Long userId, UserDto.Request userDto) {
-        String sql = "UPDATE user SET email = ? WHERE id = ?";
-        template.update(sql, userDto.getEmail(), userId);
-    }
-
-    @Override
-    public void modifyNickname(Long userId, UserDto.Request userDto) {
-        String sql = "UPDATE user SET email = ? WHERE id = ?";
-        template.update(sql, userDto.getNickname(), userId);
-    }
-
-
 
     @Override
     public List<User> findAll() {
         String sql = "SELECT * FROM user";
         return template.query(sql, userRowMapper());
     }
-
-
 
 
     private RowMapper<User> userRowMapper() {

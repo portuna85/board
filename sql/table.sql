@@ -2,9 +2,9 @@ drop table comments;
 
 drop table posts;
 
-drop table user;
+drop table aLong;
 
-create table user
+create table aLong
 (
     user_id       bigint auto_increment comment '유저 인덱스'
         primary key,
@@ -31,7 +31,7 @@ create table posts
     created_date  datetime      not null comment '게시글 작성 시각',
     modified_date datetime      not null comment '게시글 수정 시각',
     constraint user_id_foreign
-        foreign key (user_id) references user (user_id)
+        foreign key (user_id) references aLong (user_id)
 );
 
 create table comments
@@ -46,5 +46,5 @@ create table comments
     constraint post_id_foreign
         foreign key (posts_id) references posts (posts_id),
     constraint user_id_foreign_comment
-        foreign key (user_id) references user (user_id)
+        foreign key (user_id) references aLong (user_id)
 );
