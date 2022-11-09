@@ -1,22 +1,19 @@
 package com.blitz.board.web;
 
 import com.blitz.board.domain.User;
-import com.blitz.board.repository.UserRepository;
+import com.blitz.board.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final UserRepository userRepository;
+    private final SessionManager sessionManager;
 
     // @GetMapping("/")
     public String index() {
@@ -24,30 +21,15 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index(@CookieValue(name = "userId", required = false) Long userId, Model model) {
-        if (userId == null) {
+    public String index(HttpServletRequest request, Model model) {
+
+        User user = (User) sessionManager.getSession(request);
+
+        if (user == null) {
             return "index";
         }
 
-        User loginUser = userRepository.findById(userId);
-
-        if (loginUser == null) {
-            return "index";
-        }
-
-        model.addAttribute("user", loginUser);
+        model.addAttribute("user", user);
         return "loginHome";
-    }
-
-    @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "userId");
-        return "redirect:/";
-    }
-
-    private void expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
     }
 }
