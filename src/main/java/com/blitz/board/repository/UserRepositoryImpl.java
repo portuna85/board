@@ -51,13 +51,12 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(5, Role.BRONZE.getValue());
             return ps;
         }, keyHolder);
-        long lastInsertId = keyHolder.getKey().longValue();
-        user.setId(lastInsertId);
+        user.setId(keyHolder.getKey().longValue());
         return user;
     }
 
     @Override
-    public User findById(User userId) {
+    public User findById(Long userId) {
         String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +

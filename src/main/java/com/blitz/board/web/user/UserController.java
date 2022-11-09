@@ -47,7 +47,7 @@ public class UserController {
      * 회원상세 정보
      */
     @GetMapping("/user/{userId}")
-    public String findUser(@PathVariable("userId") User userId, Model model) {
+    public String findUser(@PathVariable("userId") Long userId, Model model) {
         log.info("userId = {}", userId);
         User user = userService.findUser(userId);
         model.addAttribute("user", user);
@@ -74,9 +74,10 @@ public class UserController {
         }
 
         // 로그인 성공시
+
+        // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
         Cookie idCookie = new Cookie("userId", String.valueOf(loginMember.getId()));
         response.addCookie(idCookie);
-
         return "redirect:/";
     }
 }

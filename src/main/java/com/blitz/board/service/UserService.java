@@ -2,14 +2,11 @@ package com.blitz.board.service;
 
 import com.blitz.board.domain.User;
 import com.blitz.board.repository.UserRepository;
-import com.blitz.board.service.dto.LoginDto;
 import com.blitz.board.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,7 +21,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findUser(User userId) {
+    public User findUser(Long userId) {
         return userRepository.findById(userId);
     }
 
