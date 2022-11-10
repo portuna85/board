@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -90,6 +89,7 @@ public class UserController {
 
         HttpSession session = request.getSession(false);
 
+        // session 있어도 무효로 함
         if (session != null) {
             session.invalidate();
         }
