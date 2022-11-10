@@ -1,18 +1,12 @@
 package com.blitz.board.repository;
 
-import com.blitz.board.domain.Role;
 import com.blitz.board.domain.User;
-import com.blitz.board.service.dto.UserDto;
-import lombok.RequiredArgsConstructor;
+import com.blitz.board.domain.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,15 +14,22 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate template;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public UserRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("user")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public User join(User user) {
@@ -50,46 +51,13 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(5, Role.BRONZE.getValue());
             return ps;
         }, keyHolder);
-        long lastInsertId = keyHolder.getKey().longValue();
-        user.setId(lastInsertId);
+        user.setId(keyHolder.getKey().longValue());
         return user;
     }
 
     @Override
-    public void modifyUser(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user " +
-                " SET nickname = ?, password = ?, email = ?, modified_date = now() " +
-                " WHERE user_id = ?";
-
-        log.info("Repository dto = {}", dto);
-
-        template.update(sql, dto.getNickname(), dto.getPassword(), dto.getEmail(), userId);
-    }
-
-    @Override
-    public void modifyPassword(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET password = ? WHERE user_id = ?";
-        log.info("Repo PassWord Modify = {}", dto);
-        template.update(sql, dto.getPassword(), userId);
-    }
-
-    @Override
-    public void modifyNickname(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
-        log.info("Repo NickName Modify = {}", dto);
-        template.update(sql, dto.getNickname(), userId);
-    }
-
-    @Override
-    public void modifyEmail(Long userId, UserDto.Request dto) {
-        String sql = "UPDATE user SET email = ? WHERE user_id = ?";
-        log.info("Repo Email Modify = {}", dto);
-        template.update(sql, dto.getEmail(), userId);
-    }
-
-    @Override
-    public Optional<User> findByUser(Long id) {
-        String sql = "SELECT user_id, " +
+    public User findById(Long userId) {
+        String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +
                 " password, " +
@@ -98,19 +66,33 @@ public class UserRepositoryImpl implements UserRepository {
                 " created_date, " +
                 " modified_date " +
                 " FROM user " +
-                " WHERE user_id = ?";
+                " WHERE id = ?";
         try {
-            User user = template.queryForObject(sql, userRowMapper(), id);
-            return Optional.of(user);
+            User user = template.queryForObject(sql, userRowMapper(), userId);
+            return user;
         } catch (DataAccessException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public void delete(Long userID) {
-        String sql = "DELETE FROM user WHERE id= ?";
-        template.update(sql);
+    public Optional<User> findByLoginId(String username) {
+        // List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), username);
+        List<User> result = template.query("SELECT id, username, nickname, password FROM user WHERE username = ?", userRowMapper(), username);
+        log.info("REPO result = {}", result);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public void delete(Long userId) {
+        String sql = "DELETE FROM user WHERE id = ?";
+        template.update(sql, userId);
+    }
+
+    @Override
+    public List<User> findAll() {
+        String sql = "SELECT * FROM user";
+        return template.query(sql, userRowMapper());
     }
 
     private RowMapper<User> userRowMapper() {

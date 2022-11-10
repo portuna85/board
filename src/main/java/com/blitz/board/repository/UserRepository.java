@@ -1,23 +1,20 @@
 package com.blitz.board.repository;
 
 import com.blitz.board.domain.User;
-import com.blitz.board.service.dto.UserDto;
 
+import java.util.List;
 import java.util.Optional;
 
-
 public interface UserRepository {
+
     User join(User user);
 
-    void modifyUser(Long userId, UserDto.Request dto);
+    User findById(Long userID);
 
-    void modifyPassword(Long userId, UserDto.Request dto);
+    List<User> findAll();
 
-    void modifyEmail(Long userId, UserDto.Request dto);
+    Optional<User> findByLoginId(String userId);
 
-    void modifyNickname(Long userId, UserDto.Request dto);
+    void delete(Long userId);
 
-    Optional<User> findByUser(Long id);
-
-    void delete(Long userID);
 }

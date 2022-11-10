@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ###
 
-POST localhost:8080/user/17/update
+POST localhost:8080/aLong/17/update
 Content-Type: application/json
 
 {
@@ -20,6 +20,6 @@ Content-Type: application/json
 }
 
 ###
-GET localhost:8080/user/5
+GET localhost:8080/aLong/5
 Content-Type: application/json
 

@@ -1,16 +1,12 @@
 package com.blitz.board.service.dto;
 
-
 import com.blitz.board.domain.Role;
 import com.blitz.board.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-
 
 public class UserDto {
 

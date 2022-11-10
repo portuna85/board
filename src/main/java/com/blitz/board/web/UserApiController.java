@@ -25,12 +25,14 @@ public class UserApiController {
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
 
+    /*
     @PostMapping("/{userId}/update")
     public ResponseEntity<String> modifyUser(@RequestBody UserDto.Request dto, @PathVariable("userId") Long userId) {
         log.info("requestJoin = {}, pathVa = {}", dto, userId);
         userService.modifyUser(userId, dto);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
+    */
 
     /*
     @GetMapping("/user/{userId}")

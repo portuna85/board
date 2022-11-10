@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -19,33 +17,18 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserDto.Request dto) {
-        log.info("UserDto = {}", dto);
         userRepository.join(dto.toEntity());
     }
 
-    @Transactional
-    public void modifyUser(Long userId, UserDto.Request user) {
-
-        userRepository.modifyUser(userId, user);
-    }
-
-    @Transactional
-    public void modifyPassword(Long userId, UserDto.Request user) {
-        userRepository.modifyPassword(userId, user);
-    }
-
-    @Transactional
-    public void modifyEmail(Long userId, UserDto.Request user) {
-        userRepository.modifyEmail(userId, user);
-    }
-
-    @Transactional
-    public void modifyNickname(Long userId, UserDto.Request user) {
-        userRepository.modifyNickname(userId, user);
+    @Transactional(readOnly = true)
+    public User findUser(Long userId) {
+        return userRepository.findById(userId);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findUser(Long userId) {
-        return userRepository.findByUser(userId);
+    public User login(String loginId, String password) {
+        return userRepository.findByLoginId(loginId)
+                .filter(u -> u.getPassword().equals(password))
+                .orElse(null);
     }
 }
