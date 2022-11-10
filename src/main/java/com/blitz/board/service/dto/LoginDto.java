@@ -1,6 +1,5 @@
 package com.blitz.board.service.dto;
 
-import com.blitz.board.domain.User;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -53,10 +52,6 @@ public class UserController {
     public String findUser(@PathVariable("userId") Long userId, Model model) {
         User user = userService.findUser(userId);
         model.addAttribute("user", user);
-        model.addAttribute("user", user);
-        model.addAttribute("user", user);
-        model.addAttribute("user", user);
-        model.addAttribute("user", user);
         return "users/user";
     }
 
@@ -85,19 +80,10 @@ public class UserController {
         return "redirect:/";
     }
 
-
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
 
         sessionManager.expire(request);
         return "redirect:/";
     }
-
-    /*
-    private void expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-    }
-    */
 }
