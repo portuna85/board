@@ -37,8 +37,8 @@ public class UserRepositoryImpl implements UserRepository {
          * TODO
          *  sql문을 StringBuffer 또는 StringBuilder 사용
          */
-        String sql = "INSERT INTO user(id, username, password, nickname, email, role, created_date, modified_date)" +
-                " VALUES (null, ?, ?, ?, ?, ?, now(), now())";
+        String sql = "INSERT INTO user(username, password, nickname, email, role, created_date, modified_date)" +
+                " VALUES (?, ?, ?, ?, ?, now(), now())";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
@@ -76,9 +76,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByLoginId(String username) {
-        // List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), username);
-        List<User> result = template.query("SELECT id, nickname, password FROM user WHERE username = ?", userRowMapper(), username);
+    public Optional<User> findByLoginId(String userId) {
+        List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), userId);
         log.info("REPO result = {}", result);
         return result.stream().findAny();
     }

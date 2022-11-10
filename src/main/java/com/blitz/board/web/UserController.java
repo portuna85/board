@@ -4,7 +4,7 @@ import com.blitz.board.domain.User;
 import com.blitz.board.service.UserService;
 import com.blitz.board.service.dto.LoginDto;
 import com.blitz.board.service.dto.UserDto;
-import com.blitz.board.web.session.SessionManager;
+import com.blitz.board.web.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
@@ -23,7 +24,6 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final SessionManager sessionManager;
 
     @GetMapping("/signup")
     public String joinForm(@ModelAttribute("userDto") UserDto.Request dto, Model model) {
@@ -61,21 +61,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, HttpServletResponse response) {
+    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return "users/loginForm";
         }
 
-        User loginMember = userService.login(dto.getLoginId(), dto.getPassword());
+        User loginUser = userService.login(dto.getLoginId(), dto.getPassword());
 
-        if (loginMember == null) {
+        if (loginUser == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "users/loginForm";
         }
 
-        // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
-        sessionManager.createSession(loginMember, response);
+        // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
+        HttpSession session = request.getSession(true);
+        
+        // 세션에 로그인 회원 정보 보관
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
         return "redirect:/";
     }
@@ -83,7 +86,14 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
 
-        sessionManager.expire(request);
+        // sessionManager.expire(request);   - 세션 만료시 expire
+
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
+
         return "redirect:/";
     }
 }

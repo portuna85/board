@@ -22,8 +22,7 @@ public class SessionInfoController {
         }
 
         // 세션 데이터 출력
-        session.getAttributeNames()
-                .asIterator()
+        session.getAttributeNames().asIterator()
                 .forEachRemaining(name -> log.info("session name = {}, value = {}", name, session.getAttribute(name)));
 
         log.info("Session Id = {}", session.getId());
