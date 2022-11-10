@@ -20,7 +20,7 @@ public class HomeController {
             return "index";
         }
 
-        // Session이 유지되면 로그인으로 이동
+        // Session 유지되면 로그인으로 이동
         model.addAttribute("user", loginUser);
 
         return "loginHome";
