@@ -2,11 +2,11 @@ drop table comments;
 
 drop table posts;
 
-drop table aLong;
+drop table user;
 
-create table aLong
+create table user
 (
-    user_id       bigint auto_increment comment '유저 인덱스'
+    id       bigint auto_increment comment '유저 인덱스'
         primary key,
     email         varchar(200)              not null comment '이메일',
     nickname      varchar(200)              not null comment '닉네임',
@@ -16,12 +16,12 @@ create table aLong
     created_date  datetime                  not null comment '회원가입 시각',
     modified_date datetime                  not null comment '회원정보 시각',
     constraint user_email_unique
-        unique (user_id, email, username)
+        unique (id, email, username)
 );
 
 create table posts
 (
-    posts_id      bigint auto_increment comment '게시글 인덱스'
+    id      bigint auto_increment comment '게시글 인덱스'
         primary key,
     content       text          not null comment '글 내용',
     title         varchar(500)  not null comment '글 제목',
@@ -31,12 +31,12 @@ create table posts
     created_date  datetime      not null comment '게시글 작성 시각',
     modified_date datetime      not null comment '게시글 수정 시각',
     constraint user_id_foreign
-        foreign key (user_id) references aLong (user_id)
+        foreign key (user_id) references user (id)
 );
 
 create table comments
 (
-    comments_id   bigint auto_increment comment '댓글 인덱스'
+    id   bigint auto_increment comment '댓글 인덱스'
         primary key,
     comment       text     not null comment '댓글 내용',
     posts_id      bigint   not null comment '게시글 인덱스',
@@ -44,7 +44,7 @@ create table comments
     created_date  datetime not null comment '댓글 작성 시각',
     modified_date datetime not null comment '댓글 수정 시각',
     constraint post_id_foreign
-        foreign key (posts_id) references posts (posts_id),
+        foreign key (posts_id) references posts (id),
     constraint user_id_foreign_comment
-        foreign key (user_id) references aLong (user_id)
+        foreign key (user_id) references user (id)
 );

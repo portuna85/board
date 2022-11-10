@@ -68,8 +68,8 @@ public class UserRepositoryImpl implements UserRepository {
                 " FROM user " +
                 " WHERE id = ?";
         try {
-            User aLong = template.queryForObject(sql, userRowMapper(), userId);
-            return aLong;
+            User user = template.queryForObject(sql, userRowMapper(), userId);
+            return user;
         } catch (DataAccessException e) {
             return null;
         }
@@ -78,12 +78,13 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByLoginId(String userId) {
         List<User> result = template.query("SELECT id, username, password, nickname, email FROM user WHERE username = ?", userRowMapper(), userId);
+        log.info("REPO result = {}", result);
         return result.stream().findAny();
     }
 
     @Override
     public void delete(Long userId) {
-        String sql = "DELETE FROM user WHERE id= ?";
+        String sql = "DELETE FROM user WHERE id = ?";
         template.update(sql, userId);
     }
 
@@ -92,7 +93,6 @@ public class UserRepositoryImpl implements UserRepository {
         String sql = "SELECT * FROM user";
         return template.query(sql, userRowMapper());
     }
-
 
     private RowMapper<User> userRowMapper() {
         return BeanPropertyRowMapper.newInstance(User.class); //camel 변환 지원

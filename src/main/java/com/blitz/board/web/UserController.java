@@ -75,8 +75,6 @@ public class UserController {
             return "users/loginForm";
         }
 
-        // 로그인 성공시
-
         // 쿠키에 시간 정보를 주지 않으면 세션 쿠키(브라우저 종료시 모두 종료)
         sessionManager.createSession(loginMember, response);
 
@@ -91,10 +89,11 @@ public class UserController {
         return "redirect:/";
     }
 
+    /*
     private void expireCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
-
+    */
 }
