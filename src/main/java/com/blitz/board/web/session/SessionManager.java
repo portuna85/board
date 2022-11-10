@@ -18,9 +18,12 @@ public class SessionManager {
     public static final String SESSION_COOKIE_NAME = "mySessionId";
     private Map<String, Object> sessionStore =  new ConcurrentHashMap<>();
 
+    /**
+     * 세션 생성
+     */
     public void createSession(Object value, HttpServletResponse response) {
 
-        // 세션 id를 생성하고, 값을 세션에 저장
+        // 세션 id를 생성하고, 값을 세션보관소에 저장
         String sessionId = UUID.randomUUID().toString();
         sessionStore.put(sessionId, value);
 
