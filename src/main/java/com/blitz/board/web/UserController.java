@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -66,9 +67,9 @@ public class UserController {
             return "users/loginForm";
         }
 
-        User loginMember = userService.login(dto.getLoginId(), dto.getPassword());
+        User loginUser = userService.login(dto.getLoginId(), dto.getPassword());
 
-        if (loginMember == null) {
+        if (loginUser == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "users/loginForm";
         }
@@ -77,11 +78,7 @@ public class UserController {
         HttpSession session = request.getSession(true);
         
         // 세션에 로그인 회원 정보 보관
-        session.setAttribute(SessionConst.LOGIN_USER, loginMember);
-
-        // 세션 관리자를 통해 세션을 생성하고, 회원 데이터 보관
-        // sessionManager.createSession(loginMember, response);
-
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
         return "redirect:/";
     }
