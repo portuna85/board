@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -23,6 +24,9 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+
+    public String sessionId;
+
 
     @GetMapping("/signup")
     public String joinForm(@ModelAttribute("userDto") UserDto.Request dto, Model model) {
@@ -75,7 +79,7 @@ public class UserController {
 
         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
         HttpSession session = request.getSession(true);
-        
+
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
@@ -84,8 +88,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
-
-        // sessionManager.expire(request);   - 세션 만료시 expire
 
         HttpSession session = request.getSession(false);
 

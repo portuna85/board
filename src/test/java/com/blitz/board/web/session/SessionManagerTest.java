@@ -1,12 +1,14 @@
 package com.blitz.board.web.session;
 
 import com.blitz.board.domain.User;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.assertj.core.api.Assertions.*;
 
+@Slf4j
 class SessionManagerTest {
 
     SessionManager sessionManager = new SessionManager();
@@ -30,6 +32,6 @@ class SessionManagerTest {
         sessionManager.expire(request);
         Object expired = sessionManager.getSession(request);
         assertThat(expired).isNull();
-
     }
 }
+
