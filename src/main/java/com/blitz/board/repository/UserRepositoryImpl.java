@@ -78,7 +78,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByLoginId(String username) {
         // List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), username);
-        List<User> result = template.query("SELECT * FROM user WHERE username = ?", userRowMapper(), username);
+        List<User> result = template.query("SELECT id, nickname, password FROM user WHERE username = ?", userRowMapper(), username);
         log.info("REPO result = {}", result);
         return result.stream().findAny();
     }
