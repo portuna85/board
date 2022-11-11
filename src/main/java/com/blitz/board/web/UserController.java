@@ -25,9 +25,6 @@ public class UserController {
 
     private final UserService userService;
 
-    public String sessionId;
-
-
     @GetMapping("/signup")
     public String joinForm(@ModelAttribute("userDto") UserDto.Request dto, Model model) {
         model.addAttribute("UserDto", dto);
