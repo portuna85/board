@@ -31,7 +31,6 @@ public class User {
 
     private LocalDateTime modifiedDate;
 
-
     public String getRoleValue() {
         return this.role.getValue();
     }
