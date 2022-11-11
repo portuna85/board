@@ -12,11 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 
 @Slf4j
 @Controller
@@ -24,9 +22,6 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-
-    public String sessionId;
-
 
     @GetMapping("/signup")
     public String joinForm(@ModelAttribute("userDto") UserDto.Request dto, Model model) {
