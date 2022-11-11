@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -80,7 +81,6 @@ public class UserController {
 
         // 세션을 종료 시킬수 있음 - 초
         session.setMaxInactiveInterval(600);
-
 
         return "redirect:" + redirectURL;
     }
