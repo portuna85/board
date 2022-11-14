@@ -33,5 +33,26 @@ class SessionManagerTest {
         Object expired = sessionManager.getSession(request);
         assertThat(expired).isNull();
     }
-}
 
+    @Test
+    public void common() {
+        // given
+        class Solution {
+            public int solution(int[] common) {
+                int answer = 0;
+                for (int i = 0; i < common.length; i++) {
+                    int i1 = common[i + 1] - common[i];
+                }
+                return answer;
+            }
+        }
+
+        // when
+
+
+        // then
+
+
+    }
+
+}

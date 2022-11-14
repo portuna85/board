@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -61,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, HttpServletRequest request) {
+    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return "users/loginForm";
@@ -80,7 +79,10 @@ public class UserController {
         // 세션에 로그인 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
-        return "redirect:/";
+        // 세션을 종료 시킬수 있음 - 초
+        session.setMaxInactiveInterval(600);
+
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
