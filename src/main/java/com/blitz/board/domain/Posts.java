@@ -2,6 +2,7 @@ package com.blitz.board.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
 public class Posts {
 
     private Long id;
@@ -29,5 +31,6 @@ public class Posts {
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
+
 
 }
