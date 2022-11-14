@@ -45,7 +45,7 @@ public class UserController {
     }
 
     /**
-     * 회원상세 정보
+     * 회원정보 상세보기 
      */
     @GetMapping("/user/{userId}")
     public String findUser(@PathVariable("userId") Long userId, Model model) {
