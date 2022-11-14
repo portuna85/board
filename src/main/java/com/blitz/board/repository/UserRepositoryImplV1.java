@@ -19,16 +19,17 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImplV1 implements UserRepository {
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public UserRepositoryImpl(DataSource dataSource) {
+    public UserRepositoryImplV1(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("user")
                 .usingGeneratedKeyColumns("id");
+                // .usingColumns();
     }
 
     @Override
