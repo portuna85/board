@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -49,7 +49,7 @@ public class UserController {
      */
     @GetMapping("/user/{userId}")
     public String findUser(@PathVariable("userId") Long userId, Model model) {
-        User user = userService.findUser(userId);
+        Optional<User> user = userService.findUser(userId);
         model.addAttribute("user", user);
         return "users/user";
     }
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request) {
+    public String login(@Validated @ModelAttribute("loginDto") LoginDto dto, BindingResult bindingResult, @RequestParam(defaultValue = "/") String redirectURL, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return "users/loginForm";

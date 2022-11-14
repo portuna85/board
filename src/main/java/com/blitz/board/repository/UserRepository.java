@@ -9,7 +9,7 @@ public interface UserRepository {
 
     User join(User user);
 
-    User findById(Long userID);
+    Optional<User> findById(Long userID);
 
     List<User> findAll();
 

@@ -3,29 +3,29 @@ package com.blitz.board.repository;
 import com.blitz.board.domain.User;
 import com.blitz.board.domain.Role;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private final JdbcTemplate template;
+    private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
     public UserRepositoryImpl(DataSource dataSource) {
-        this.template = new JdbcTemplate(dataSource);
+        this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("user")
                 .usingGeneratedKeyColumns("id");
@@ -37,26 +37,21 @@ public class UserRepositoryImpl implements UserRepository {
          * TODO
          *  sql문을 StringBuffer 또는 StringBuilder 사용
          */
-        String sql = "INSERT INTO user(id, username, password, nickname, email, role, created_date, modified_date)" +
-                " VALUES (null, ?, ?, ?, ?, ?, now(), now())";
+        String sql = "INSERT INTO user( username, password, nickname, email,  created_date, modified_date)" +
+                " VALUES (:username, :password, :nickname, :email, now(), now())";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(connection -> {
-            log.info("dtoValues = {}", user.getUsername());
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getNickname());
-            ps.setString(4, user.getEmail());
-            ps.setString(5, Role.BRONZE.getValue());
-            return ps;
-        }, keyHolder);
-        user.setId(keyHolder.getKey().longValue());
+        BeanPropertySqlParameterSource param = new BeanPropertySqlParameterSource(user);
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+        template.update(sql, param, keyHolder);
+        user.setRole(Role.BRONZE);
+        long key = keyHolder.getKey().longValue();
+        user.setId(key);
         return user;
     }
 
     @Override
-    public User findById(Long userId) {
+    public Optional<User> findById(Long id) {
         String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +
@@ -66,27 +61,33 @@ public class UserRepositoryImpl implements UserRepository {
                 " created_date, " +
                 " modified_date " +
                 " FROM user " +
-                " WHERE id = ?";
+                " WHERE id = :id";
         try {
-            User user = template.queryForObject(sql, userRowMapper(), userId);
-            return user;
-        } catch (DataAccessException e) {
-            return null;
+            Map<String, Object> param = Map.of("id", id);
+            User user = template.queryForObject(sql, param, userRowMapper());
+            return Optional.of(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 
     @Override
     public Optional<User> findByLoginId(String username) {
-        // List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), username);
-        List<User> result = template.query("SELECT id, nickname, password FROM user WHERE username = ?", userRowMapper(), username);
-        log.info("REPO result = {}", result);
-        return result.stream().findAny();
+        String sql = "SELECT id, username, nickname, password FROM user WHERE username = :username";
+
+        try {
+            Map<String, Object> param = Map.of("username", username);
+            User user = template.queryForObject(sql, param, userRowMapper());
+            return Optional.of(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public void delete(Long userId) {
         String sql = "DELETE FROM user WHERE id = ?";
-        template.update(sql, userId);
+        //template.update(sql, userId);
     }
 
     @Override
