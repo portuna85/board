@@ -28,7 +28,8 @@ public class UserRepositoryImpl implements UserRepository {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("user")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("title", "content", "writer", "view", "createdDate", "modifiedDate");
     }
 
     @Override
