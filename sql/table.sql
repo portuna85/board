@@ -13,8 +13,8 @@ create table user
     password      varchar(255)              not null comment '비밀번호',
     role          char(10) default 'BRONZE' null comment '회원등급',
     username      varchar(30)               not null comment '계정',
-    created_date  datetime                  not null comment '회원가입 시각',
-    modified_date datetime                  not null comment '회원정보 시각',
+    created_date  datetime                  not null comment '회원 가입 시각',
+    modified_date datetime                  not null comment '회원정보 수정 시각',
     constraint user_email_unique
         unique (id, email, username)
 );
