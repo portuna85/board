@@ -1,58 +1,52 @@
 package com.blitz.board.repository;
 
 import com.blitz.board.domain.User;
-import com.blitz.board.domain.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 @Slf4j
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImplV2 implements UserRepository {
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public UserRepositoryImpl(DataSource dataSource) {
+    public UserRepositoryImplV2(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("user")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("title", "content", "writer", "view", "createdDate", "modifiedDate");
+                .usingColumns("username", "password", "nickname", "email", "role",
+                        "created_date", "modified_date");
     }
 
     @Override
     public User join(User user) {
-        /**
-         * TODO
-         *  sql문을 StringBuffer 또는 StringBuilder 사용
-         */
-        String sql = "INSERT INTO user( username, password, nickname, email,  created_date, modified_date)" +
-                " VALUES (:username, :password, :nickname, :email, now(), now())";
-
         BeanPropertySqlParameterSource param = new BeanPropertySqlParameterSource(user);
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-        template.update(sql, param, keyHolder);
-        user.setRole(Role.BRONZE);
-        long key = keyHolder.getKey().longValue();
-        user.setId(key);
+        Number key = jdbcInsert.executeAndReturnKey(param);
+
+        user.setId(key.longValue());
         return user;
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +
@@ -66,15 +60,15 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             Map<String, Object> param = Map.of("id", id);
             User user = template.queryForObject(sql, param, userRowMapper());
-            return Optional.of(user);
+            return user;
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
     public Optional<User> findByLoginId(String username) {
-        String sql = "SELECT id, username, nickname, password FROM user WHERE username = :username";
+        String sql = "SELECT id, nickname, password FROM user WHERE username = :username";
 
         try {
             Map<String, Object> param = Map.of("username", username);
@@ -88,7 +82,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void delete(Long userId) {
         String sql = "DELETE FROM user WHERE id = ?";
-        //template.update(sql, userId);
+        // template.update(sql, userId);
     }
 
     @Override
