@@ -43,13 +43,13 @@ public class UserDto {
         }
 
         public User toEntity() {
+
             return User.builder()
                     .id(id)
                     .username(username)
                     .password(password)
                     .nickname(nickname)
                     .email(email)
-                    .role(role)
                     .createdDate(createdDate)
                     .modifiedDate(modifiedDate)
                     .build();
