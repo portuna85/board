@@ -32,5 +32,4 @@ public class Posts {
 
     private LocalDateTime modifiedDate;
 
-
 }
