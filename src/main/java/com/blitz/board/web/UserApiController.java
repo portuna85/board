@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -23,6 +27,46 @@ public class UserApiController {
         userService.saveUser(dto);
         log.info("join = {}", dto);
         return new ResponseEntity<>("Ok", HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/")
+    @ResponseBody
+    public String index(HttpServletRequest request) {
+
+        String sessionName = null;
+
+        HttpSession session = request.getSession(true);
+        session.setAttribute("session_data", "session id: " + session.getId() + " + time: " + LocalDateTime.now());
+        session.setMaxInactiveInterval(60);
+
+        if (session != null) {
+            return session.getId();
+        }
+
+
+        return "index";
+    }
+
+    @GetMapping("/call")
+    @ResponseBody
+    public String call(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            return String.valueOf(session.getAttribute("session_data"));
+        }
+
+        return "call";
+    }
+
+    @GetMapping("/init")
+    @ResponseBody
+    public String init(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "init";
     }
 
     /*
