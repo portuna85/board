@@ -2,7 +2,6 @@ package com.blitz.board.service;
 
 import com.blitz.board.domain.Posts;
 import com.blitz.board.repository.PostsRepository;
-import com.blitz.board.service.dto.PostsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,15 +15,12 @@ public class PostsService {
     private final PostsRepository postsRepository;
 
     @Transactional
-    public void savePost(PostsDto.Request dto) {
-
-        dto.getContent();
-        dto.getTitle();
-        dto.getUser().getNickname();
-        dto.getUser().getId();
+    public void savePost(Posts posts) {
 
 
-        postsRepository.save(dto);
+
+
+        postsRepository.save(posts);
     }
 
     @Transactional(readOnly = true)

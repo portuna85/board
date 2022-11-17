@@ -8,7 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
+@Getter @Setter
 public class Posts {
 
     private Long id;

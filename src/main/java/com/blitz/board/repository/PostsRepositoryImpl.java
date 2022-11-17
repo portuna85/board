@@ -23,23 +23,21 @@ public class PostsRepositoryImpl implements PostsRepository {
     }
 
     @Override
-    public Posts save(PostsDto.Request dto) {
+    public Posts save(Posts posts) {
         String sql = "INSERT INTO posts(id, content, title, writer, user_id)" +
                 " VALUES (null, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
-            log.info("dtoValues = {}", dto.getTitle());
+            log.info("dtoValues = {}", posts.getTitle());
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, dto.getContent());
-            ps.setString(2, dto.getTitle());
-            ps.setString(3, dto.getUser().getNickname());
-            ps.setLong(4, dto.getUser().getId());
+            ps.setString(1, posts.getContent());
+            ps.setString(2, posts.getTitle());
+            ps.setString(3, posts.getUser().getNickname());
+            ps.setLong(4, posts.getUser().getId());
             return ps;
         }, keyHolder);
-        dto.setId(keyHolder.getKey().longValue());
-
-
+        posts.setId(keyHolder.getKey().longValue());
 
         return new Posts();
     }

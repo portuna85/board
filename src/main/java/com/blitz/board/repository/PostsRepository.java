@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PostsRepository {
 
-    Posts save(PostsDto.Request dto);
+    Posts save(Posts posts);
 
     List<Posts> findAll();
 
