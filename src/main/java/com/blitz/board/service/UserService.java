@@ -28,7 +28,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User login(String loginId, String password) {
         return userRepository.findByLoginId(loginId)
-                .filter(u -> u.getPassword().equals(password))
+                .filter(u -> u.getPwd().equals(password))
                 .orElse(null);
     }
 }

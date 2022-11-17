@@ -23,28 +23,7 @@ public class HomeController {
     @GetMapping("/")
     public String index(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession httpSession) {
 
-        String sessionName = null;
-
         HttpSession session = request.getSession(false);
-
-        final Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                log.info("cookieValue = {}, cookieName = {}", cookies[i].getValue(), cookies[i].getName());
-
-                if (cookies[i].getName().equals("JSESSIONID")) {
-                    sessionName = cookies[i].getValue();
-                }
-            }
-        }
-
-        if (session != null) {
-            sessionName.equals(session.getId());
-            return "loginHome";
-        } else {
-            httpSession.setAttribute(sessionName, "computer2");
-        }
 
         User loginUser = (User) session.getAttribute(SessionConst.LOGIN_USER);
 

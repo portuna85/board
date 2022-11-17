@@ -1,51 +1,63 @@
-
-#### user table ###
+### create user table ###
 create table user
 (
-    id            bigint auto_increment comment '유저 인덱스'
+    id            int auto_increment comment '유저 인덱스'
         primary key,
-    email         varchar(200)              not null comment '이메일',
-    nickname      varchar(200)              not null comment '닉네임',
-    password      varchar(255)              not null comment '비밀번호',
-    role          char(10) default 'BRONZE' null comment '회원등급',
-    username      varchar(30)               not null comment '계정',
-    created_date  datetime                  not null comment '회원 가입 시각',
-    modified_date datetime                  not null comment '회원정보 수정 시각',
-    constraint user_email_unique
-        unique (id, email, username)
+    username      varchar(30)                         not null comment '유저 계정',
+    pwd           varchar(200)                        null comment '유저 비밀번호',
+    nickname      varchar(200)                        null comment '닉네임',
+    role_user     char(10)  default 'BRONZE'          not null comment '회원등급',
+    created_date  timestamp DEFAULT CURRENT_TIMESTAMP not null comment '회원가입 시간',
+    modified_date timestamp DEFAULT CURRENT_TIMESTAMP null comment '회원정보 수정 시간',
+    email         varchar(200)                        not null comment '이메일',
+    constraint email
+        unique (email),
+    constraint id
+        unique (id),
+    constraint username
+        unique (username)
 );
 
-### post table ###
+### create posts table ###
 create table posts
 (
-    id            bigint auto_increment comment '게시글 인덱스'
+    id            int auto_increment comment '게시글 인덱스'
         primary key,
-    content       text          not null comment '글 내용',
-    title         varchar(500)  not null comment '글 제목',
-    view          int default 0 not null comment '조회수',
-    writer        varchar(255)  not null comment '작성자',
-    user_id       bigint        not null comment '사용자 고유 아이디',
-    created_date  datetime      not null comment '게시글 작성 시각',
-    modified_date datetime      not null comment '게시글 수정 시각',
-    constraint user_id_foreign
+    title         varchar(500)                        not null comment '글 제목',
+    content       text                                not null comment '게시글 내용',
+    writer        varchar(255)                        not null comment '게시글 작성자',
+    cnt           int                                 null comment '게시글 조회수',
+    created_date  timestamp DEFAULT CURRENT_TIMESTAMP not null comment '게시글 작성 시간',
+    modified_date timestamp DEFAULT CURRENT_TIMESTAMP not null comment '게시글 수정 시간',
+    user_id       int                                 not null comment '사용자 고유 아이디',
+    constraint id
+        unique (id),
+    constraint user_id
+        unique (user_id),
+    constraint writer
+        unique (writer),
+    constraint user_id
         foreign key (user_id) references user (id)
 );
 
-INSERT INTO posts(id, content, title, writer, user_id, created_date, modified_date)
-VALUES (null, ?, ?, (SELECT nickname FROM user WHERE id = ?), (SELECT id FROM user WHERE id = ?), now(), now());
-
-### comments table ###
+### create comments table ###
 create table comments
 (
-    id            bigint auto_increment comment '댓글 인덱스'
+    id            int auto_increment comment '댓글 인덱스'
         primary key,
-    comment       text     not null comment '댓글 내용',
-    posts_id      bigint   not null comment '게시글 인덱스',
-    user_id       bigint   not null comment '유저 인덱스',
-    created_date  datetime not null comment '댓글 작성 시각',
-    modified_date datetime not null comment '댓글 수정 시각',
-    constraint post_id_foreign
+    cmt           text                                not null comment '댓글 내용',
+    user_id       int                                 not null comment '유저 인덱스',
+    posts_id      int                                 not null comment '게시글 인덱스',
+    created_data  timestamp DEFAULT CURRENT_TIMESTAMP not null comment '댓글 작성 시간',
+    modified_date timestamp DEFAULT CURRENT_TIMESTAMP not null comment '회원정보 수정 시간',
+    constraint id
+        unique (id),
+    constraint posts_id
+        unique (posts_id),
+    constraint user_id
+        unique (user_id),
+    constraint comments_posts_id_fk
         foreign key (posts_id) references posts (id),
-    constraint user_id_foreign_comment
+    constraint comments_user_id_fk
         foreign key (user_id) references user (id)
 );

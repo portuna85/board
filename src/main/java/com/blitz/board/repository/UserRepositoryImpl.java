@@ -29,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("user")
                 .usingGeneratedKeyColumns("id");
-                // .usingColumns();
+        // .usingColumns();
     }
 
     @Override
@@ -38,18 +38,17 @@ public class UserRepositoryImpl implements UserRepository {
          * TODO
          *  sql문을 StringBuffer 또는 StringBuilder 사용
          */
-        String sql = "INSERT INTO user(id, username, password, nickname, email, role, created_date, modified_date)" +
-                " VALUES (null, ?, ?, ?, ?, ?, now(), now())";
+        String sql = "INSERT INTO user(id, username, pwd, nickname, email)" +
+                " VALUES (null, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
             log.info("dtoValues = {}", user.getUsername());
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
+            ps.setString(2, user.getPwd());
             ps.setString(3, user.getNickname());
             ps.setString(4, user.getEmail());
-            ps.setString(5, Role.BRONZE.getValue());
             return ps;
         }, keyHolder);
         user.setId(keyHolder.getKey().longValue());
@@ -61,8 +60,8 @@ public class UserRepositoryImpl implements UserRepository {
         String sql = "SELECT id, " +
                 " email, " +
                 " nickname, " +
-                " password, " +
-                " role, " +
+                " pwd, " +
+                " role_user, " +
                 " username, " +
                 " created_date, " +
                 " modified_date " +
@@ -79,7 +78,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByLoginId(String username) {
         // List<User> result = template.query("SELECT id, username, nickname, password, email FROM user WHERE username = ?", userRowMapper(), username);
-        List<User> result = template.query("SELECT id, nickname, password FROM user WHERE username = ?", userRowMapper(), username);
+        List<User> result = template.query("SELECT id, nickname, pwd FROM user WHERE username = ?", userRowMapper(), username);
         log.info("REPO result = {}", result);
         return result.stream().findAny();
     }

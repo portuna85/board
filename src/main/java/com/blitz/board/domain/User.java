@@ -18,7 +18,7 @@ public class User {
     private String username;
 
     @NotEmpty
-    private String password;
+    private String pwd;
 
     @NotEmpty
     private String nickname;

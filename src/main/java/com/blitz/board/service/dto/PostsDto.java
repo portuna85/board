@@ -1,6 +1,7 @@
 package com.blitz.board.service.dto;
 
 import com.blitz.board.domain.Posts;
+import com.blitz.board.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class PostsDto {
         private String content;
         private String writer;
         private int view;
+        private User user;
         private LocalDateTime createdDate;
         private LocalDateTime modifiedDate;
 
