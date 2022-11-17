@@ -1,12 +1,8 @@
-drop table comments;
 
-drop table posts;
-
-drop table user;
-
+#### user table ###
 create table user
 (
-    id       bigint auto_increment comment '유저 인덱스'
+    id            bigint auto_increment comment '유저 인덱스'
         primary key,
     email         varchar(200)              not null comment '이메일',
     nickname      varchar(200)              not null comment '닉네임',
@@ -19,9 +15,10 @@ create table user
         unique (id, email, username)
 );
 
+### post table ###
 create table posts
 (
-    id      bigint auto_increment comment '게시글 인덱스'
+    id            bigint auto_increment comment '게시글 인덱스'
         primary key,
     content       text          not null comment '글 내용',
     title         varchar(500)  not null comment '글 제목',
@@ -34,9 +31,13 @@ create table posts
         foreign key (user_id) references user (id)
 );
 
+INSERT INTO posts(id, content, title, writer, user_id, created_date, modified_date)
+VALUES (null, ?, ?, (SELECT nickname FROM user WHERE id = ?), (SELECT id FROM user WHERE id = ?), now(), now());
+
+### comments table ###
 create table comments
 (
-    id   bigint auto_increment comment '댓글 인덱스'
+    id            bigint auto_increment comment '댓글 인덱스'
         primary key,
     comment       text     not null comment '댓글 내용',
     posts_id      bigint   not null comment '게시글 인덱스',
