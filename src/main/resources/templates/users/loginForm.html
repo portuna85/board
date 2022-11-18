@@ -1,23 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container {
-            max-width: 560px;
-        }
-
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-        }
-    </style>
+<head th:replace="fragments/header :: header">
+    <meta http-equiv="Content-Type" content="application/json; charset=UTF-8"/>
 </head>
 <body>
 <div class="container">
-    <div class="py-5 text-center">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="jumbotron">
         <h2>로그인</h2>
     </div>
     <form action="/login" th:action th:object="${loginDto}" method="post">
@@ -53,6 +43,7 @@
             </div>
         </div>
     </form>
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 </html>
